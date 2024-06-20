@@ -62,15 +62,28 @@
 
     let sideInfos: SideInfos = {
         speak_time: [],
+        most_used_words: [],
     }
 
     interface SideInfos {
         speak_time: SpeakTime[];
+        total_duration: number;
+        most_used_words: MostUsedWords[];
     }
 
     interface SpeakTime {
         speaker: string;
         duration: number;
+    }
+
+    interface MostUsedWords {
+        speaker: string;
+        words: Words;
+    }
+
+    interface Words {
+        word: string;
+        count: number;
     }
 
 
@@ -79,7 +92,7 @@
     let audioElement: HTMLAudioElement;
 
     onMount(async () => {
-        const res = await fetch(PUBLIC_S3_URL + $page.params.folder + '/' + $page.params.file);
+        const res = await fetch(PUBLIC_S3_URL + "/" + $page.params.folder + '/' + $page.params.file);
         let json = await res.json();
         transcript = json[1];
         infos = json[0];
@@ -99,7 +112,19 @@
                 });
             }
 
+            // check speaker most used words
+            if (!sideInfos.most_used_words.find(speaker => speaker.speaker === segment.speaker)) {
+                sideInfos.most_used_words.push({
+                    speaker: segment.speaker,
+                    words: speakerMostUsedWords(segment.speaker),
+                });
+            }
         });
+
+        // sort by duration
+        sideInfos.speak_time.sort((a, b) => b.duration - a.duration);
+
+        sideInfos.total_duration = sideInfos.speak_time.reduce((acc, speaker) => acc + speaker.duration, 0);
 
 
         console.log(sideInfos);
@@ -117,6 +142,25 @@
         return speak_time;
     }
 
+    function speakerMostUsedWords(speaker: string) {
+        let words = [];
+        transcript?.output?.segments.forEach(segment => {
+            if (segment.speaker === speaker) {
+                words.push(segment.text.split(' '));
+            }
+        });
+        return words;
+    }
+
+    function formatTime(time: number) {
+        // HH:MM:SS format but check if hours or minutes are 0
+        return new Date(time * 1000).toISOString().substr(11, 8).replace(/^[0:]+/, '');
+    }
+
+    function getPercentage(value: number, total: number) {
+        console.log(value, total);
+        return (value / total) * 100;
+    }
     function togglePlayPause() {
         if (audioElement.paused) {
             audioElement.play();
@@ -184,7 +228,11 @@
         </div>
         <div class="pl-4">
             <h2 class="text-2xl font-bold">Infos</h2>
-            <p>{infos.itunes.summary}</p>
+            <h3 class="text-xl font-bold">Temps de parole</h3>
+            {#each sideInfos.speak_time as speak_time}
+                <p>{speak_time.speaker} : {formatTime(speak_time.duration.toFixed())}</p>
+                <progress class="progress w-56" value={getPercentage(speak_time?.duration?.toFixed(), sideInfos.total_duration.toFixed()) || 0} max="100"></progress>
+            {/each}
         </div>
     </div>
 

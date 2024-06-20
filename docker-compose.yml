@@ -1,0 +1,19 @@
+services:
+  front:
+    build: 
+      context: ./front
+      dockerfile: Dockerfile
+      target: dev
+    ports:
+      - "5173:5173"
+    env_file:
+      - .env
+    volumes:
+      - ./front:/app
+  db:
+    build: ./db
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./db/pb_migrations/:/pb_migrations
+      - ./db/pb_data/:/pb_data/
