@@ -1,1 +1,3 @@
 db/pb_data/*
+postgres
+.env
