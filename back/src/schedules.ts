@@ -1,7 +1,7 @@
 import { Connection, Client, ScheduleOverlapPolicy } from '@temporalio/client';
-import { watchUsers } from './workflows';
+import { watchPodcast } from './workflows';
 
-async function run() {
+export async function runSchedules() {
     const temporalHost = process.env.TEMPORAL_ADDRESS;
     // Connect to the default Server location
     const client = new Client({
@@ -9,28 +9,24 @@ async function run() {
     });
 
   //https://typescript.temporal.io/api/classes/client.ScheduleClient#create
-  const watchUsersSchedule = await client.schedule.create({
+  const watchPodcastSchedule = await client.schedule.create({
     action: {
       type: 'startWorkflow',
-      workflowType: watchUsers,
+      workflowType: watchPodcast,
       //args: [''],
       taskQueue: 'main-queue',
     },
-    scheduleId: 'watchUsers-schedule',
+    scheduleId: 'watchPodcast-schedule',
     policies: {
-      catchupWindow: '1 day',
+      catchupWindow: '1h',
       overlap: ScheduleOverlapPolicy.SKIP,
     },
     spec: {
-      intervals: [{ every: '5s' }]
+      intervals: [{ every: '15s' }]
     },
   });
-  console.log(`Started schedule '${watchUsersSchedule.scheduleId}'.`);
+  console.log(`Started schedule '${watchPodcastSchedule.scheduleId}'.`);
 
   await client.connection.close();
 }
 
-run().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});

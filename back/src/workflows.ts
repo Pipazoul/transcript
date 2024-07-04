@@ -4,8 +4,9 @@ import type * as activities from './activities';
 
 
 const {
-   // User
-   decrementUsersCredits
+   // Podcasts
+   getPendingPodcasts,
+   getEpisodes
 } = workflow.proxyLocalActivities<typeof activities>({
     startToCloseTimeout: '20s',
     retry: {
@@ -13,7 +14,10 @@ const {
     }
 });
 
-export async function watchUsers(): Promise<any> {
-  console.log("👥 👀 Watching Users");
-  await decrementUsersCredits();
+export async function watchPodcast(): Promise<any> {
+  console.log("🎧 👀 Watching Podcasts");
+  const podcasts = await getPendingPodcasts();
+  //console.log("🎧 Podcasts", podcasts);
+  await getEpisodes(podcasts);
+  return podcasts;
 }

@@ -31,12 +31,14 @@
         "axios": "^1.6.7",
         "dotenv": "^16.4.5",
         "express": "^4.19.2",
+        "fast-xml-parser": "^4.4.0",
         "formdata-node": "^6.0.3",
         "minio": "^8.0.0",
         "nanoid": "3.x",
         "node": "^21.6.2",
         "node-fetch": "^2.7.0",
         "pocketbase": "^0.21.1",
+        "rss-parser": "^3.13.0",
         "winston": "^3.11.0"
     },
     "devDependencies": {

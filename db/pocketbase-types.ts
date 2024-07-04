@@ -7,7 +7,7 @@ import type { RecordService } from 'pocketbase'
 
 export enum Collections {
 	Episodes = "episodes",
-	Podcats = "podcats",
+	Podcasts = "podcasts",
 	Speakers = "speakers",
 	Users = "users",
 }
@@ -51,7 +51,7 @@ export type EpisodesRecord<Ttranscript = unknown> = {
 	url?: string
 }
 
-export type PodcatsRecord = {
+export type PodcastsRecord = {
 	episodes?: RecordIdString[]
 	image?: string
 	name?: string
@@ -70,7 +70,7 @@ export type UsersRecord = {
 
 // Response types include system fields and match responses from the PocketBase API
 export type EpisodesResponse<Ttranscript = unknown, Texpand = unknown> = Required<EpisodesRecord<Ttranscript>> & BaseSystemFields<Texpand>
-export type PodcatsResponse<Texpand = unknown> = Required<PodcatsRecord> & BaseSystemFields<Texpand>
+export type PodcastsResponse<Texpand = unknown> = Required<PodcastsRecord> & BaseSystemFields<Texpand>
 export type SpeakersResponse<Texpand = unknown> = Required<SpeakersRecord> & BaseSystemFields<Texpand>
 export type UsersResponse<Texpand = unknown> = Required<UsersRecord> & AuthSystemFields<Texpand>
 
@@ -78,14 +78,14 @@ export type UsersResponse<Texpand = unknown> = Required<UsersRecord> & AuthSyste
 
 export type CollectionRecords = {
 	episodes: EpisodesRecord
-	podcats: PodcatsRecord
+	podcasts: PodcastsRecord
 	speakers: SpeakersRecord
 	users: UsersRecord
 }
 
 export type CollectionResponses = {
 	episodes: EpisodesResponse
-	podcats: PodcatsResponse
+	podcasts: PodcastsResponse
 	speakers: SpeakersResponse
 	users: UsersResponse
 }
@@ -95,7 +95,7 @@ export type CollectionResponses = {
 
 export type TypedPocketBase = PocketBase & {
 	collection(idOrName: 'episodes'): RecordService<EpisodesResponse>
-	collection(idOrName: 'podcats'): RecordService<PodcatsResponse>
+	collection(idOrName: 'podcasts'): RecordService<PodcastsResponse>
 	collection(idOrName: 'speakers'): RecordService<SpeakersResponse>
 	collection(idOrName: 'users'): RecordService<UsersResponse>
 }

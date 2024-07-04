@@ -1,6 +1,6 @@
 import { NativeConnection, Worker } from '@temporalio/worker';
 import * as activities from './activities';
-
+import { runSchedules } from './schedules';
 async function run() {
   const temporalHost = process.env.TEMPORAL_ADDRESS;
 
@@ -33,6 +33,11 @@ async function run() {
   // See https://typescript.temporal.io/api/classes/worker.Runtime#install to customize these defaults.
   await worker.run();
 }
+
+runSchedules().catch((err) => {
+  console.error(err);
+  //process.exit(1);
+});
 
 run().catch((err) => {
   console.error(err);

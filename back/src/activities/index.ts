@@ -1,6 +1,6 @@
-import { decrementUsersCredits } from "./user"
-
+import { getPendingPodcasts} from "./podcasts"
+import { getEpisodes } from "./episodes"
 export { 
-    // User
-    decrementUsersCredits
+    getPendingPodcasts,
+    getEpisodes
 }
